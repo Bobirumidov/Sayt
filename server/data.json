@@ -1,0 +1,146 @@
+{
+  "news": [
+    {
+      "id": 1787577294725,
+      "title": "test",
+      "category": "test",
+      "date": "2026-08-24",
+      "desc": "",
+      "img": "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=600&q=80",
+      "title_uz": "test",
+      "title_ru": "",
+      "title_en": "",
+      "category_uz": "test",
+      "category_ru": "",
+      "category_en": "",
+      "desc_uz": "yangilik",
+      "desc_ru": "",
+      "desc_en": ""
+    },
+    {
+      "id": 1,
+      "title": "Yangi 3D seysmik qidiruv texnologiyasi joriy etildi",
+      "date": "20 Avgust, 2026",
+      "category": "Texnologiyalar",
+      "desc": "Kompaniyamiz izlov-qidiruv jarayonlarini tezlashtirish maqsadida eng so'nggi 3D seysmik texnologiyalarini qo'llashni boshladi.",
+      "img": "https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": 2,
+      "title": "Xalqaro neft va gaz ko'rgazmasida ishtirok",
+      "date": "15 Avgust, 2026",
+      "category": "Kompaniya",
+      "desc": "UNG Burg'ilash MCHJ vakillari xalqaro OGU ko'rgazmasida o'z xizmatlarini taqdim etdi va yangi shartnomalar imzoladi.",
+      "img": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1787577655498,
+      "name": "test",
+      "location": "test",
+      "type": "Burg'ilash",
+      "status": "Jarayonda",
+      "desc": "test",
+      "img": "http://localhost:5000/uploads/1787577655491-959556527.png"
+    }
+  ],
+  "equipment": [
+    {
+      "id": 1787578113041,
+      "name": "test",
+      "model": "test",
+      "category": "Burg'ilash",
+      "specs": "test",
+      "img": "http://localhost:5000/uploads/1787578113034-488347397.webp"
+    }
+  ],
+  "vacancies": [
+    {
+      "id": 1787578914824,
+      "title": ",njhkjkj",
+      "dept": "xxzxz",
+      "type": "To'liq stavka",
+      "desc": "zxzxzx",
+      "img": null
+    },
+    {
+      "id": 1787578135977,
+      "title": "muxandis",
+      "dept": "it",
+      "type": "To'liq stavka",
+      "desc": "test",
+      "img": null
+    }
+  ],
+  "applications": [
+    {
+      "id": 1787578291512,
+      "name": "Gafforov Xusan",
+      "phone": "+998904888800",
+      "email": "b.umidov@jacmotors.uz",
+      "vacancy": "muxandis",
+      "img": "http://localhost:5000/uploads/1787578291503-358396614.docx"
+    },
+    {
+      "id": 1787578155206,
+      "name": "admin Umidov",
+      "phone": "+998943350550",
+      "email": "bobirumidov1984@gamail.com",
+      "vacancy": "muxandis",
+      "img": "http://localhost:5000/uploads/1787578155201-277762879.docx"
+    }
+  ],
+  "messages": [
+    {
+      "id": 1787579083120,
+      "name": "Bobir Umidov",
+      "phone": "+998943350550",
+      "email": "bobirumidov1984@gmail.com",
+      "subject": "asdsadsad",
+      "message": "sadasdasd",
+      "img": null
+    }
+  ],
+  "settings": {
+    "hikvision_ip": "192.168.110.151",
+    "hikvision_user": "admin",
+    "hikvision_pass": "pass12345",
+    "company_name": "UNG Burg'ilash MCHJ",
+    "email": "info@ung-burgilash.uz",
+    "phone": "+998 71 123 45 67",
+    "about_text": "UNG Burg‘ilash MCHJ neft va gaz quduqlarini burg‘ilash sektorida faoliyat yurituvchi, sohada yetakchi o'rinlarni egallagan zamonaviy muhandislik kompaniyasidir.",
+    "about_image": "http://localhost:5000/uploads/1787579741043-227466858.jpg",
+    "slider_img_1": "http://localhost:5000/uploads/1787579967769-174578639.png",
+    "slider_img_2": "http://localhost:5000/uploads/1787579967770-501853332.jpg",
+    "slider_img_3": "http://localhost:5000/uploads/1787579967771-15700419.webp"
+  },
+  "faceIds": [
+    {
+      "id": 1787579302422,
+      "name": "test",
+      "employeeId": "98",
+      "img": "http://localhost:5000/uploads/1787579302415-125909368.jpg"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin",
+      "role": "superadmin"
+    },
+    {
+      "id": 1787582169405,
+      "username": "hr",
+      "password": "123",
+      "role": "hr"
+    },
+    {
+      "id": 1787630226751,
+      "username": "manager",
+      "password": "123",
+      "role": "editor"
+    }
+  ]
+}
