@@ -12,7 +12,7 @@ const AdminVacancies = () => {
 
   const fetchVacancies = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/vacancies');
+      const res = await fetch('/api/vacancies');
       setVacancies(await res.json());
     } catch (e) {}
   };
@@ -23,7 +23,7 @@ const AdminVacancies = () => {
     e.preventDefault();
     
     // We send JSON for this one, since no image is required for vacancies
-    await fetch('http://localhost:5000/api/vacancies', {
+    await fetch('/api/vacancies', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, dept, type, desc })
@@ -36,7 +36,7 @@ const AdminVacancies = () => {
 
   const handleDelete = async (id: number) => {
     if (window.confirm("Rostdan o'chirmoqchimisiz?")) {
-      await fetch(`http://localhost:5000/api/vacancies/${id}`, { method: 'DELETE' });
+      await fetch(`/api/vacancies/${id}`, { method: 'DELETE' });
       fetchVacancies();
     }
   };

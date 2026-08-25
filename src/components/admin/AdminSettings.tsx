@@ -35,7 +35,7 @@ const AdminSettings = () => {
   const fileRefSlider3 = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/settings')
+    fetch('/api/settings')
       .then(res => res.json())
       .then(data => {
         setSettings(prev => ({ ...prev, ...data }));
@@ -72,7 +72,7 @@ const AdminSettings = () => {
         }
       });
 
-      await fetch('http://localhost:5000/api/settings', {
+      await fetch('/api/settings', {
         method: 'POST',
         body: formData
       });

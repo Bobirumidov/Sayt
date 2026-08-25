@@ -20,7 +20,7 @@ const AdminNews = () => {
 
   const fetchNews = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/news');
+      const res = await fetch('/api/news');
       setNews(await res.json());
     } catch (e) {}
   };
@@ -73,7 +73,7 @@ const AdminNews = () => {
     if (image) data.append('image', image);
 
     try {
-      const url = editId ? `http://localhost:5000/api/news/${editId}` : 'http://localhost:5000/api/news';
+      const url = editId ? `/api/news/${editId}` : '/api/news';
       const method = editId ? 'PUT' : 'POST';
       
       await fetch(url, {
@@ -88,7 +88,7 @@ const AdminNews = () => {
 
   const handleDelete = async (id: number) => {
     if(window.confirm("Rostdan o'chirmoqchimisiz?")) {
-      await fetch(`http://localhost:5000/api/news/${id}`, { method: 'DELETE' });
+      await fetch(`/api/news/${id}`, { method: 'DELETE' });
       fetchNews();
     }
   };

@@ -11,7 +11,7 @@ const Vacancies = () => {
   const [submitStatus, setSubmitStatus] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/vacancies')
+    fetch('/api/vacancies')
       .then(res => res.json())
       .then(data => setVacancies(data));
   }, []);
@@ -29,7 +29,7 @@ const Vacancies = () => {
     if (cvFile) data.append('image', cvFile);
 
     try {
-      const res = await fetch('http://localhost:5000/api/applications', {
+      const res = await fetch('/api/applications', {
         method: 'POST',
         body: data
       });

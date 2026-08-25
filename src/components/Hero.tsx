@@ -14,7 +14,7 @@ const Hero = () => {
   const [backgrounds, setBackgrounds] = useState(defaultBackgrounds);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/settings')
+    fetch('/api/settings')
       .then(res => res.json())
       .then(data => {
         const newBgs = [];

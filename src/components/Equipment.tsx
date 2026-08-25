@@ -10,7 +10,7 @@ const Equipment = () => {
   const [equipments, setEquipments] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/equipment')
+    fetch('/api/equipment')
       .then(res => res.json())
       .then(data => setEquipments(data));
   }, []);

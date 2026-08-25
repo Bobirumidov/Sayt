@@ -13,7 +13,7 @@ const AdminProjects = () => {
   const [image, setImage] = useState<File | null>(null);
 
   const fetchProjects = async () => {
-    const res = await fetch('http://localhost:5000/api/projects');
+    const res = await fetch('/api/projects');
     setProjects(await res.json());
   };
 
@@ -29,7 +29,7 @@ const AdminProjects = () => {
     formData.append('desc', desc);
     if(image) formData.append('image', image);
 
-    await fetch('http://localhost:5000/api/projects', { method: 'POST', body: formData });
+    await fetch('/api/projects', { method: 'POST', body: formData });
     setName(''); setLocation(''); setDesc(''); setImage(null);
     setIsModalOpen(false);
     fetchProjects();
@@ -37,7 +37,7 @@ const AdminProjects = () => {
 
   const handleDelete = async (id: number) => {
     if (window.confirm("O'chirishni xohlaysizmi?")) {
-      await fetch(`http://localhost:5000/api/projects/${id}`, { method: 'DELETE' });
+      await fetch(`/api/projects/${id}`, { method: 'DELETE' });
       fetchProjects();
     }
   };

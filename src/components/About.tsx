@@ -10,7 +10,7 @@ const About = () => {
   });
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/settings')
+    fetch('/api/settings')
       .then(res => res.json())
       .then(data => {
         if (data.about_text || data.about_image) {

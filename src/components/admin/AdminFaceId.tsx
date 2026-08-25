@@ -18,10 +18,10 @@ const AdminFaceId = () => {
 
   const fetchData = async () => {
     try {
-      const resFaces = await fetch('http://localhost:5000/api/faceIds');
+      const resFaces = await fetch('/api/faceIds');
       setFaces(await resFaces.json());
       
-      const resSettings = await fetch('http://localhost:5000/api/settings');
+      const resSettings = await fetch('/api/settings');
       const setts = await resSettings.json();
       setSettings({
         hikvision_ip: setts.hikvision_ip || '',
@@ -35,7 +35,7 @@ const AdminFaceId = () => {
 
   const handleDelete = async (id: number) => {
     if (window.confirm("Rostdan o'chirmoqchimisiz? (Eslatma: Haqiqiy apparatdan ham o'chiriladi)")) {
-      await fetch(`http://localhost:5000/api/faceIds/${id}`, { method: 'DELETE' });
+      await fetch(`/api/faceIds/${id}`, { method: 'DELETE' });
       fetchData();
     }
   };
@@ -44,10 +44,10 @@ const AdminFaceId = () => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      const resSettings = await fetch('http://localhost:5000/api/settings');
+      const resSettings = await fetch('/api/settings');
       const currentSettings = await resSettings.json();
       
-      await fetch('http://localhost:5000/api/settings', {
+      await fetch('/api/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...currentSettings, ...settings })
@@ -78,7 +78,7 @@ const AdminFaceId = () => {
     formData.append('image', image);
 
     try {
-      await fetch('http://localhost:5000/api/faceIds', {
+      await fetch('/api/faceIds', {
         method: 'POST',
         body: formData
       });
@@ -176,7 +176,7 @@ const AdminFaceId = () => {
             <p className="text-sm text-gray-500 mb-4">
               Agar to'g'ridan-to'g'ri ulana olmasangiz, barcha yuzlarni ZIP arxiv qilib yuklab oling va iVMS-4200 dasturidan "Import" qiling.
             </p>
-            <a href="http://localhost:5000/api/faceIds/export" download className="block w-full text-center bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium py-2 rounded-md transition-colors">
+            <a href="/api/faceIds/export" download className="block w-full text-center bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium py-2 rounded-md transition-colors">
               ZIP qilib yuklab olish
             </a>
           </div>

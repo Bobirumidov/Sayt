@@ -11,7 +11,7 @@ const AdminUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/users');
+      const res = await fetch('/api/users');
       setUsers(await res.json());
     } catch (e) {}
   };
@@ -21,7 +21,7 @@ const AdminUsers = () => {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await fetch('http://localhost:5000/api/users', {
+      await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, role })
@@ -36,7 +36,7 @@ const AdminUsers = () => {
 
   const handleDelete = async (id: number) => {
     if(window.confirm("Rostdan o'chirmoqchimisiz?")) {
-      await fetch(`http://localhost:5000/api/users/${id}`, { method: 'DELETE' });
+      await fetch(`/api/users/${id}`, { method: 'DELETE' });
       fetchUsers();
     }
   };

@@ -80,7 +80,7 @@ const writeData = (data) => {
 // Rasm yuklash API (Ixtiyoriy yordamchi endpoint)
 app.post('/api/upload', upload.single('image'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: "Fayl yuklanmadi" });
-  res.json({ imageUrl: `http://localhost:${PORT}/uploads/${req.file.filename}` });
+  res.json({ imageUrl: `/uploads/${req.file.filename}` });
 });
 
 // --- UNIVERSAL CRUD API ---
@@ -97,7 +97,7 @@ const createCrudEndpoints = (resourceName) => {
     
     let imageUrl = req.body.img || req.body.image || null; // Eski URL bo'lishi mumkin
     if (req.file) {
-      imageUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+      imageUrl = `/uploads/${req.file.filename}`;
     }
 
     const newItem = {
@@ -123,7 +123,7 @@ const createCrudEndpoints = (resourceName) => {
       if (index !== -1) {
         let imageUrl = data[resourceName][index].img; // Eski rasmni saqlab qolish
         if (req.file) {
-          imageUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`; // Yangi rasm yuklansa
+          imageUrl = `/uploads/${req.file.filename}`; // Yangi rasm yuklansa
         }
         
         data[resourceName][index] = {
@@ -215,7 +215,7 @@ app.post('/api/settings', upload.any(), (req, res) => {
   // Update any images uploaded (req.files is an array because of upload.any())
   if (req.files && req.files.length > 0) {
     req.files.forEach(file => {
-      data.settings[file.fieldname] = `http://localhost:${PORT}/uploads/${file.filename}`;
+      data.settings[file.fieldname] = `/uploads/${file.filename}`;
     });
   }
 
@@ -263,6 +263,13 @@ app.delete('/api/users/:id', (req, res) => {
   data.users = data.users.filter(u => u.id !== parseInt(req.params.id));
   writeData(data);
   res.json({ success: true });
+});
+
+// Front-end statik fayllari
+app.use(express.static(path.join(__dirname, '../dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 app.listen(PORT, () => {

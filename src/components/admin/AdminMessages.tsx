@@ -10,10 +10,10 @@ const AdminMessages = () => {
   const fetchData = async () => {
     try {
       if (activeTab === 'applications') {
-        const res = await fetch('http://localhost:5000/api/applications');
+        const res = await fetch('/api/applications');
         setApplications(await res.json());
       } else {
-        const res = await fetch('http://localhost:5000/api/messages');
+        const res = await fetch('/api/messages');
         setMessages(await res.json());
       }
     } catch (e) {}
@@ -25,7 +25,7 @@ const AdminMessages = () => {
 
   const handleDelete = async (id: number) => {
     if (window.confirm("Rostdan o'chirmoqchimisiz?")) {
-      await fetch(`http://localhost:5000/api/${activeTab}/${id}`, { method: 'DELETE' });
+      await fetch(`/api/${activeTab}/${id}`, { method: 'DELETE' });
       fetchData();
     }
   };

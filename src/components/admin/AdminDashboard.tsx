@@ -9,10 +9,10 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const [n, p, v, e] = await Promise.all([
-          fetch('http://localhost:5000/api/news').then(r => r.json()),
-          fetch('http://localhost:5000/api/projects').then(r => r.json()),
-          fetch('http://localhost:5000/api/vacancies').then(r => r.json()),
-          fetch('http://localhost:5000/api/equipment').then(r => r.json()),
+          fetch('/api/news').then(r => r.json()),
+          fetch('/api/projects').then(r => r.json()),
+          fetch('/api/vacancies').then(r => r.json()),
+          fetch('/api/equipment').then(r => r.json()),
         ]);
         setStatsData({ news: n.length, projects: p.length, vacancies: v.length, equipment: e.length });
       } catch (err) {

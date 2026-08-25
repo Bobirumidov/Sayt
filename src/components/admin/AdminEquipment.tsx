@@ -13,7 +13,7 @@ const AdminEquipment = () => {
 
   const fetchEquipment = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/equipment');
+      const res = await fetch('/api/equipment');
       setEquipmentList(await res.json());
     } catch (e) { console.error(e); }
   };
@@ -22,7 +22,7 @@ const AdminEquipment = () => {
 
   const handleDelete = async (id: number) => {
     if (window.confirm("Rostdan ham bu texnikani o'chirmoqchimisiz?")) {
-      await fetch(`http://localhost:5000/api/equipment/${id}`, { method: 'DELETE' });
+      await fetch(`/api/equipment/${id}`, { method: 'DELETE' });
       fetchEquipment();
     }
   };
@@ -36,7 +36,7 @@ const AdminEquipment = () => {
     formData.append('specs', specs);
     if(image) formData.append('image', image);
 
-    await fetch('http://localhost:5000/api/equipment', {
+    await fetch('/api/equipment', {
       method: 'POST',
       body: formData
     });

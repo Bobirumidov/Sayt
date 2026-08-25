@@ -74,7 +74,7 @@ const FaceId = () => {
     formData.append('image', image);
 
     try {
-      const res = await fetch('http://localhost:5000/api/faceIds', {
+      const res = await fetch('/api/faceIds', {
         method: 'POST',
         body: formData
       });
