@@ -48,13 +48,13 @@ const AdminLayout = () => {
         <div className="flex-1 overflow-y-auto py-4">
           <nav className="space-y-1 px-3">
             {menuItems.map((item) => {
-              const isActive = location.pathname === item.path || (location.pathname === '/admin' && item.path === '/admin');
+              const isActive = location.pathname === item.path;
               return (
                 <Link
                   key={item.name}
                   to={item.path}
                   className={`flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors ${
-                    location.pathname === item.path
+                    isActive
                       ? 'bg-corporate-accent text-white' 
                       : 'text-gray-300 hover:bg-white/10 hover:text-white'
                   }`}

@@ -14,7 +14,7 @@ const About = () => {
       .then(res => res.json())
       .then(data => {
         if (data.about_text || data.about_image) {
-          setSettings(prev => ({ ...prev, ...data }));
+          setSettings((prev: any) => ({ ...prev, ...data }));
         }
       })
       .catch(err => console.log(err));
