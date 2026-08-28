@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [formData, setFormData] = useState({ name: '', phone: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState('');
   const [settings, setSettings] = useState<any>({});
+  const [agreementChecked, setAgreementChecked] = useState(false);
 
   useEffect(() => {
     fetch('/api/settings')
@@ -26,6 +27,7 @@ const Contact = () => {
       if (res.ok) {
         setStatus('success');
         setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
+        setAgreementChecked(false);
       } else {
         setStatus('error');
       }
@@ -113,7 +115,25 @@ const Contact = () => {
                   <label className="block text-sm font-medium text-gray-300 mb-2">{t('contact.message')}</label>
                   <textarea rows={4} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-md text-white focus:ring-corporate-accent focus:border-corporate-accent outline-none" required></textarea>
                 </div>
-                <button type="submit" disabled={status === 'loading'} className="w-full bg-corporate-accent hover:bg-blue-600 text-white py-4 rounded-md font-bold text-lg transition-colors mt-2 disabled:opacity-70">
+                {/* Agreement Checkbox */}
+                <div className="flex items-start gap-2 text-xs text-gray-400 mt-4 select-none">
+                  <input 
+                    type="checkbox" 
+                    id="agreement-contact" 
+                    checked={agreementChecked} 
+                    onChange={e => setAgreementChecked(e.target.checked)} 
+                    className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/5 text-corporate-accent focus:ring-corporate-accent cursor-pointer"
+                  />
+                  <label htmlFor="agreement-contact" className="cursor-pointer text-gray-300">
+                    {i18n.language === 'ru' 
+                      ? "Я даю согласие на обработку моих персональных данных."
+                      : i18n.language === 'en'
+                        ? "I consent to the processing of my personal data."
+                        : "Shaxsiy ma'lumotlarimni qayta ishlashlariga rozilik beraman."}
+                  </label>
+                </div>
+
+                <button type="submit" disabled={status === 'loading' || !agreementChecked} className="w-full bg-corporate-accent hover:bg-blue-600 text-white py-4 rounded-md font-bold text-lg transition-colors mt-6 disabled:opacity-50 disabled:cursor-not-allowed">
                   {status === 'loading' ? '...' : t('contact.send')}
                 </button>
               </form>

@@ -3,12 +3,13 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Vacancies = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [vacancies, setVacancies] = useState<any[]>([]);
   const [formData, setFormData] = useState({ name: '', phone: '', email: '', vacancy: '' });
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
+  const [agreementChecked, setAgreementChecked] = useState(false);
 
   useEffect(() => {
     fetch('/api/vacancies')
@@ -37,6 +38,7 @@ const Vacancies = () => {
         setSubmitStatus('success');
         setFormData({ name: '', phone: '', email: '', vacancy: '' });
         setCvFile(null);
+        setAgreementChecked(false);
       } else {
         setSubmitStatus('error');
       }
@@ -131,7 +133,25 @@ const Vacancies = () => {
                   <input type="file" accept=".pdf,.doc,.docx" onChange={e => setCvFile(e.target.files ? e.target.files[0] : null)} className="w-full px-4 py-2 border border-gray-300 rounded-lg" required />
                 </div>
 
-                <button type="submit" disabled={isSubmitting} className="w-full bg-corporate-accent hover:bg-blue-600 text-white font-medium py-3 rounded-lg transition-colors mt-6 shadow-md shadow-blue-500/20 disabled:opacity-70">
+                {/* Agreement Checkbox */}
+                <div className="flex items-start gap-2 text-xs text-gray-500 mt-4 select-none">
+                  <input 
+                    type="checkbox" 
+                    id="agreement-vacancies" 
+                    checked={agreementChecked} 
+                    onChange={e => setAgreementChecked(e.target.checked)} 
+                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-corporate-accent focus:ring-corporate-accent cursor-pointer"
+                  />
+                  <label htmlFor="agreement-vacancies" className="cursor-pointer">
+                    {i18n.language === 'ru' 
+                      ? "Я даю согласие на обработку моих персональных данных."
+                      : i18n.language === 'en'
+                        ? "I consent to the processing of my personal data."
+                        : "Shaxsiy ma'lumotlarimni qayta ishlashlariga rozilik beraman."}
+                  </label>
+                </div>
+
+                <button type="submit" disabled={isSubmitting || !agreementChecked} className="w-full bg-corporate-accent hover:bg-blue-600 text-white font-medium py-3 rounded-lg transition-colors mt-6 shadow-md shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed">
                   {isSubmitting ? "..." : t('vacancies.modal_submit')}
                 </button>
               </form>
