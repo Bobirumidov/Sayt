@@ -93,12 +93,16 @@ const Contact = () => {
               )}
 
               {settings.disableMessages === 'true' || settings.disableMessages === true ? (
-                <div className="p-4 bg-red-500/25 border border-red-500/35 text-red-200 rounded-lg text-sm leading-relaxed text-center font-medium">
-                  {i18n.language === 'ru' 
-                    ? "Отправка сообщений временно приостановлена."
-                    : i18n.language === 'en'
-                      ? "Sending messages is temporarily suspended."
-                      : "Xabar yuborish vaqtinchalik to'xtatilgan."}
+                <div className="flex flex-col items-center justify-center py-10 px-4 text-center border border-white/10 rounded-lg bg-white/5">
+                  <div className="text-7xl font-bold text-gray-600 mb-3 tracking-widest">504</div>
+                  <div className="text-lg font-semibold text-gray-400 mb-2">Gateway Timeout</div>
+                  <p className="text-sm text-gray-500">
+                    {i18n.language === 'ru' 
+                      ? "Сервер не ответил вовремя. Пожалуйста, повторите попытку позже."
+                      : i18n.language === 'en'
+                        ? "The server didn't respond in time. Please try again later."
+                        : "Server vaqtida javob bermadi. Iltimos, keyinroq qayta urinib ko'ring."}
+                  </p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">

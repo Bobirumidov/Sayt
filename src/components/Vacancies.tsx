@@ -110,12 +110,16 @@ const Vacancies = () => {
               )}
 
               {settings.disableApplications === 'true' || settings.disableApplications === true ? (
-                <div className="p-4 bg-red-50 text-red-700 rounded-lg border border-red-200 text-sm leading-relaxed text-center font-medium">
-                  {i18n.language === 'ru' 
-                    ? "Прием заявок временно приостановлен."
-                    : i18n.language === 'en'
-                      ? "Applications are temporarily suspended."
-                      : "Vakansiya arizalari qabuli vaqtinchalik to'xtatilgan."}
+                <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+                  <div className="text-7xl font-bold text-gray-300 mb-3 tracking-widest">504</div>
+                  <div className="text-lg font-semibold text-gray-600 mb-2">Gateway Timeout</div>
+                  <p className="text-sm text-gray-500">
+                    {i18n.language === 'ru' 
+                      ? "Сервер не ответил вовремя. Пожалуйста, повторите попытку позже."
+                      : i18n.language === 'en'
+                        ? "The server didn't respond in time. Please try again later."
+                        : "Server vaqtida javob bermadi. Iltimos, keyinroq qayta urinib ko'ring."}
+                  </p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
