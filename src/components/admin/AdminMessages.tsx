@@ -6,6 +6,37 @@ const AdminMessages = () => {
   
   const [applications, setApplications] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>({});
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch('/api/settings');
+      setSettings(await res.json());
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const toggleApplicationsAcceptance = async () => {
+    const nextVal = !(settings.disableApplications === 'true' || settings.disableApplications === true);
+    const formData = new FormData();
+    formData.append('disableApplications', String(nextVal));
+    
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        body: formData
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setSettings(updated.settings);
+      }
+    } catch (e) {
+      alert("Xatolik yuz berdi");
+    }
+  };
 
   const formatDateTime = (timestamp: number) => {
     if (!timestamp) return '';
@@ -64,6 +95,31 @@ const AdminMessages = () => {
           <MessageSquare size={16} className="mr-2" /> Umumiy xabarlar
         </button>
       </div>
+
+      {activeTab === 'applications' && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+          <div className="space-y-1">
+            <h3 className="font-bold text-gray-800 text-sm">Vakansiya bo'yicha CV qabul qilish sozlamasi:</h3>
+            <p className="text-xs text-gray-500">
+              Hozirgi holat: {settings.disableApplications === 'true' || settings.disableApplications === true 
+                ? "🔴 Saytda CV qabul qilish yopiq (bloklangan)" 
+                : "🟢 Saytda CV qabul qilish ochiq (ruxsat berilgan)"}
+            </p>
+          </div>
+          <button 
+            onClick={toggleApplicationsAcceptance}
+            className={`px-4 py-2.5 rounded-lg font-semibold text-xs transition-colors shadow-sm ${
+              settings.disableApplications === 'true' || settings.disableApplications === true 
+                ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
+                : 'bg-rose-600 hover:bg-rose-700 text-white'
+            }`}
+          >
+            {settings.disableApplications === 'true' || settings.disableApplications === true 
+              ? "Qabul qilishga ruxsat berish (Yoqish)" 
+              : "Qabul qilishni to'xtatish (Bloklash)"}
+          </button>
+        </div>
+      )}
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {activeTab === 'applications' ? (
