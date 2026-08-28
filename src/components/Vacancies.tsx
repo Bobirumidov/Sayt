@@ -10,11 +10,17 @@ const Vacancies = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
   const [agreementChecked, setAgreementChecked] = useState(false);
+  const [settings, setSettings] = useState<any>({});
 
   useEffect(() => {
     fetch('/api/vacancies')
       .then(res => res.json())
       .then(data => setVacancies(data));
+      
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => setSettings(data))
+      .catch(err => console.log(err));
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -103,7 +109,16 @@ const Vacancies = () => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              {settings.disableApplications === 'true' || settings.disableApplications === true ? (
+                <div className="p-4 bg-red-50 text-red-700 rounded-lg border border-red-200 text-sm leading-relaxed text-center font-medium">
+                  {i18n.language === 'ru' 
+                    ? "Прием заявок временно приостановлен."
+                    : i18n.language === 'en'
+                      ? "Applications are temporarily suspended."
+                      : "Vakansiya arizalari qabuli vaqtinchalik to'xtatilgan."}
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">{t('vacancies.modal_name')}</label>
                   <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-corporate-accent outline-none" required />
@@ -155,6 +170,7 @@ const Vacancies = () => {
                   {isSubmitting ? "..." : t('vacancies.modal_submit')}
                 </button>
               </form>
+              )}
             </motion.div>
           </div>
         </div>

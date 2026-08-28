@@ -92,7 +92,16 @@ const Contact = () => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              {settings.disableMessages === 'true' || settings.disableMessages === true ? (
+                <div className="p-4 bg-red-500/25 border border-red-500/35 text-red-200 rounded-lg text-sm leading-relaxed text-center font-medium">
+                  {i18n.language === 'ru' 
+                    ? "Отправка сообщений временно приостановлена."
+                    : i18n.language === 'en'
+                      ? "Sending messages is temporarily suspended."
+                      : "Xabar yuborish vaqtinchalik to'xtatilgan."}
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">{t('contact.name')}</label>
                   <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-md text-white focus:ring-corporate-accent focus:border-corporate-accent outline-none" required />
@@ -137,6 +146,7 @@ const Contact = () => {
                   {status === 'loading' ? '...' : t('contact.send')}
                 </button>
               </form>
+              )}
             </div>
           </div>
         </div>

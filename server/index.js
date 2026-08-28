@@ -95,6 +95,14 @@ const createCrudEndpoints = (resourceName) => {
   app.post(`/api/${resourceName}`, upload.single('image'), (req, res) => {
     const data = readData();
     
+    // Check if disabled in settings
+    if (resourceName === 'applications' && data.settings && (data.settings.disableApplications === 'true' || data.settings.disableApplications === true)) {
+      return res.status(403).json({ error: "Ariza topshirish vaqtinchalik to'xtatilgan" });
+    }
+    if (resourceName === 'messages' && data.settings && (data.settings.disableMessages === 'true' || data.settings.disableMessages === true)) {
+      return res.status(403).json({ error: "Xabar yuborish vaqtinchalik to'xtatilgan" });
+    }
+    
     let imageUrl = req.body.img || req.body.image || null; // Eski URL bo'lishi mumkin
     if (req.file) {
       imageUrl = `/uploads/${req.file.filename}`;

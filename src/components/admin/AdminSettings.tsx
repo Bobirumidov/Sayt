@@ -121,6 +121,43 @@ const AdminSettings = () => {
         <h2 className="text-xl font-bold text-gray-800 mb-6">Tizim sozlamalari</h2>
         <div className="max-w-3xl space-y-6">
           
+          {/* Ariza va Xabarlar Blokirovkasi */}
+          <div className="bg-red-50/50 p-4 rounded-xl border border-red-200/60 mb-6 space-y-4">
+            <h3 className="text-sm font-bold text-red-800 uppercase tracking-wider mb-2">Ariza va Xabarlarni Bloklash (O'chirish)</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3 bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                <input 
+                  type="checkbox" 
+                  id="disableApplications" 
+                  checked={settings.disableApplications === 'true' || settings.disableApplications === true} 
+                  onChange={e => setSettings({...settings, disableApplications: e.target.checked})} 
+                  className="h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer mt-0.5"
+                />
+                <div>
+                  <label htmlFor="disableApplications" className="font-semibold text-gray-800 cursor-pointer text-sm">
+                    CV/Ariza yuborishni bloklash
+                  </label>
+                  <p className="text-xs text-gray-500 mt-0.5">Faollashtirilsa, tashrif buyuruvchilar vakansiyalarga ariza topshira olmaydi.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                <input 
+                  type="checkbox" 
+                  id="disableMessages" 
+                  checked={settings.disableMessages === 'true' || settings.disableMessages === true} 
+                  onChange={e => setSettings({...settings, disableMessages: e.target.checked})} 
+                  className="h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer mt-0.5"
+                />
+                <div>
+                  <label htmlFor="disableMessages" className="font-semibold text-gray-800 cursor-pointer text-sm">
+                    Xabar yuborishni bloklash
+                  </label>
+                  <p className="text-xs text-gray-500 mt-0.5">Faollashtirilsa, "Biz bilan aloqa" formasi orqali xabar yozib bo'lmaydi.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Kompaniya nomi</label>
