@@ -69,9 +69,6 @@ const AdminLogin = () => {
             Tizimga kirish
           </button>
         </form>
-        <div className="mt-6 text-center text-sm text-gray-500">
-          Hozircha test uchun: Login: <b>admin</b> | Parol: <b>admin</b>
-        </div>
       </div>
     </div>
   );

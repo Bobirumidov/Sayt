@@ -3,14 +3,14 @@ import { Activity, ShieldCheck, Wifi, Database } from 'lucide-react';
 
 const Monitoring = () => {
   return (
-    <section className="py-20 bg-corporate-dark text-white relative overflow-hidden">
+    <section className="py-20 bg-corporate-dark/85 backdrop-blur-md text-white relative overflow-hidden">
       {/* Background Grid Pattern */}
       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-16">
           <div className="w-full lg:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Burg‘ilash jarayonlarida raqamli monitoring</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">Burg‘ilash jarayonlarida raqamli monitoring</h2>
             <div className="w-20 h-1 bg-corporate-accent mb-8"></div>
             <p className="text-gray-300 mb-8 leading-relaxed text-lg">
               Biz eng so'nggi raqamli texnologiyalar orqali burg'ilash jarayonlarini 24/7 nazorat qilamiz. Bu orqali xavfsizlik va samaradorlikni eng yuqori darajaga olib chiqamiz.
@@ -37,7 +37,7 @@ const Monitoring = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="bg-corporate-dark/80 backdrop-blur-xl border border-corporate-accent/30 rounded-2xl p-6 shadow-2xl shadow-corporate-accent/20"
+              className="bg-corporate-dark/85 backdrop-blur-md/80 backdrop-blur-xl border border-corporate-accent/30 rounded-2xl p-6 shadow-2xl shadow-corporate-accent/20"
             >
               <div className="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
                 <div className="text-lg font-bold text-white flex items-center"><Activity className="w-5 h-5 mr-2 text-green-400" /> Tizim holati: Faol</div>
@@ -81,3 +81,6 @@ const Monitoring = () => {
 };
 
 export default Monitoring;
+
+
+

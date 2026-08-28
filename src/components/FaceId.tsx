@@ -90,10 +90,10 @@ const FaceId = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-20">
+    <div className="min-h-screen bg-white/75 backdrop-blur-md py-20">
       <div className="container mx-auto px-4 max-w-xl">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-          <div className="bg-corporate-dark p-6 text-center">
+          <div className="bg-corporate-dark/85 backdrop-blur-md p-6 text-center">
             <h1 className="text-2xl font-bold text-white mb-2 flex justify-center items-center gap-2">
               <UserCheck /> Face ID Ro'yxatdan O'tish
             </h1>
@@ -145,7 +145,7 @@ const FaceId = () => {
                       <span className="font-medium text-sm">Kamerani ochish</span>
                     </button>
                     
-                    <button type="button" onClick={() => fileInputRef.current?.click()} className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors">
+                    <button type="button" onClick={() => fileInputRef.current?.click()} className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-gray-300 rounded-lg bg-white/75 backdrop-blur-md text-gray-600 hover:bg-gray-100 transition-colors">
                       <Upload size={32} />
                       <span className="font-medium text-sm">Rasmni yuklash</span>
                     </button>
@@ -166,3 +166,6 @@ const FaceId = () => {
 };
 
 export default FaceId;
+
+
+

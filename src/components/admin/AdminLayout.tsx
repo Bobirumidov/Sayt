@@ -1,5 +1,5 @@
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Newspaper, Briefcase, Wrench, Users, MessageSquare, LogOut, Settings, ScanFace, UserCog } from 'lucide-react';
+import { LayoutDashboard, Newspaper, Briefcase, Wrench, Users, MessageSquare, LogOut, Settings, ScanFace, UserCog, LayoutTemplate } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const AdminLayout = () => {
@@ -18,11 +18,13 @@ const AdminLayout = () => {
 
   const allMenuItems = [
     { name: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={20} />, roles: ['superadmin', 'hr', 'editor'] },
+    { name: 'Rahbariyat', path: '/admin/management', icon: <Users size={20} />, roles: ['superadmin', 'editor'] },
     { name: 'Yangiliklar', path: '/admin/news', icon: <Newspaper size={20} />, roles: ['superadmin', 'editor'] },
     { name: 'Loyihalar', path: '/admin/projects', icon: <Briefcase size={20} />, roles: ['superadmin', 'editor'] },
     { name: 'Texnikalar', path: '/admin/equipment', icon: <Wrench size={20} />, roles: ['superadmin', 'editor'] },
     { name: 'Vakansiyalar', path: '/admin/vacancies', icon: <Users size={20} />, roles: ['superadmin', 'hr'] },
     { name: 'Xabarlar', path: '/admin/messages', icon: <MessageSquare size={20} />, roles: ['superadmin', 'hr'] },
+    { name: 'Sayt xaritasi', path: '/admin/sitemap', icon: <LayoutTemplate size={20} />, roles: ['superadmin', 'editor'] },
     { name: 'Foydalanuvchilar', path: '/admin/users', icon: <UserCog size={20} />, roles: ['superadmin'] },
     { name: 'Face ID', path: '/admin/face-id', icon: <ScanFace size={20} />, roles: ['superadmin'] },
     { name: 'Sozlamalar', path: '/admin/settings', icon: <Settings size={20} />, roles: ['superadmin'] },

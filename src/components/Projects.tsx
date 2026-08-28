@@ -18,10 +18,10 @@ const Projects = () => {
   const filtered = activeType === "Barchasi" ? projects : projects.filter(p => p.type === activeType);
 
   return (
-    <section id="projects" className="py-20 bg-gray-900 text-white">
+    <section id="projects" className="py-20 bg-gray-900/80 backdrop-blur-md text-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('projects.title')}</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">{t('projects.title')}</h2>
           <div className="w-20 h-1 bg-corporate-accent mx-auto mb-8"></div>
           
           <div className="flex flex-wrap justify-center gap-4">
@@ -61,3 +61,6 @@ const Projects = () => {
   );
 };
 export default Projects;
+
+
+

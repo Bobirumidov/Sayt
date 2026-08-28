@@ -4,17 +4,23 @@ import { useState, useEffect } from 'react';
 
 const AdminDashboard = () => {
   const [statsData, setStatsData] = useState({ news: 0, projects: 0, vacancies: 0, equipment: 0 });
+  const [messages, setMessages] = useState<any[]>([]);
+  const [applications, setApplications] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [n, p, v, e] = await Promise.all([
+        const [n, p, v, e, m, a] = await Promise.all([
           fetch('/api/news').then(r => r.json()),
           fetch('/api/projects').then(r => r.json()),
           fetch('/api/vacancies').then(r => r.json()),
           fetch('/api/equipment').then(r => r.json()),
+          fetch('/api/messages').then(r => r.json()),
+          fetch('/api/applications').then(r => r.json()),
         ]);
         setStatsData({ news: n.length, projects: p.length, vacancies: v.length, equipment: e.length });
+        setMessages(m.sort((x: any, y: any) => y.id - x.id).slice(0, 5));
+        setApplications(a.sort((x: any, y: any) => y.id - x.id).slice(0, 5));
       } catch (err) {
         console.error("Ma'lumot olishda xatolik:", err);
       }
@@ -28,6 +34,11 @@ const AdminDashboard = () => {
     { title: "Yangiliklar", value: statsData.news, icon: <Newspaper size={24} className="text-purple-500" />, change: "Nashr qilingan" },
     { title: "Texnikalar", value: statsData.equipment, icon: <MessageSquare size={24} className="text-yellow-500" />, change: "Bazada" },
   ];
+
+  const formatDate = (ts: number) => {
+    const d = new Date(ts);
+    return `${d.toLocaleDateString()} ${d.toLocaleTimeString().slice(0, 5)}`;
+  };
 
   return (
     <div className="space-y-6">
@@ -51,35 +62,65 @@ const AdminDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-2">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">So'nggi qabul qilingan xabarlar (Namuna)</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-gray-200 text-sm text-gray-500">
-                  <th className="pb-3 font-medium">Ism</th>
-                  <th className="pb-3 font-medium">Mavzu</th>
-                  <th className="pb-3 font-medium">Vaqt</th>
-                  <th className="pb-3 font-medium text-right">Harakat</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm">
-                {[
-                  { name: "Sardor Aliyev", subj: "Hamkorlik masalasi", time: "10 daqiqa oldin" },
-                  { name: "Malika Tohirova", subj: "Ishga kirish", time: "1 soat oldin" },
-                  { name: "Javohir Rustamov", subj: "Texnika ijarasi", time: "Kecha" },
-                ].map((msg, i) => (
-                  <tr key={i} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
-                    <td className="py-3 font-medium text-gray-800">{msg.name}</td>
-                    <td className="py-3 text-gray-600">{msg.subj}</td>
-                    <td className="py-3 text-gray-500">{msg.time}</td>
-                    <td className="py-3 text-right">
-                      <button className="text-blue-600 hover:underline">O'qish</button>
-                    </td>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-2 space-y-8">
+          <div>
+            <h3 className="text-lg font-bold text-gray-800 mb-4">So'nggi qabul qilingan xabarlar</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-gray-200 text-sm text-gray-500">
+                    <th className="pb-3 font-medium">Ism</th>
+                    <th className="pb-3 font-medium">Mavzu</th>
+                    <th className="pb-3 font-medium">Vaqt</th>
+                    <th className="pb-3 font-medium text-right">Harakat</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="text-sm">
+                  {messages.length === 0 ? (
+                    <tr><td colSpan={4} className="py-4 text-center text-gray-500">Hozircha xabarlar yo'q</td></tr>
+                  ) : messages.map((msg) => (
+                    <tr key={msg.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
+                      <td className="py-3 font-medium text-gray-800">{msg.name}</td>
+                      <td className="py-3 text-gray-600">{msg.subject}</td>
+                      <td className="py-3 text-gray-500">{formatDate(msg.id)}</td>
+                      <td className="py-3 text-right">
+                        <Link to="/admin/messages" className="text-blue-600 hover:underline">O'qish</Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-gray-800 mb-4">So'nggi kelib tushgan CV lar</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-gray-200 text-sm text-gray-500">
+                    <th className="pb-3 font-medium">Ism</th>
+                    <th className="pb-3 font-medium">Telefon</th>
+                    <th className="pb-3 font-medium">Vaqt</th>
+                    <th className="pb-3 font-medium text-right">Harakat</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  {applications.length === 0 ? (
+                    <tr><td colSpan={4} className="py-4 text-center text-gray-500">Hozircha CV lar yo'q</td></tr>
+                  ) : applications.map((app) => (
+                    <tr key={app.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
+                      <td className="py-3 font-medium text-gray-800">{app.name}</td>
+                      <td className="py-3 text-gray-600">{app.phone}</td>
+                      <td className="py-3 text-gray-500">{formatDate(app.id)}</td>
+                      <td className="py-3 text-right">
+                        <Link to="/admin/messages" className="text-blue-600 hover:underline">O'qish</Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 

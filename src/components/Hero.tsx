@@ -2,11 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-const defaultBackgrounds = [
-  "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1542385151-efd9000785a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-  "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-];
+const defaultBackgrounds: string[] = [];
 
 const Hero = () => {
   const { t } = useTranslation();
@@ -21,6 +17,8 @@ const Hero = () => {
         if (data.slider_img_1) newBgs.push(data.slider_img_1);
         if (data.slider_img_2) newBgs.push(data.slider_img_2);
         if (data.slider_img_3) newBgs.push(data.slider_img_3);
+        if (data.slider_img_4) newBgs.push(data.slider_img_4);
+        if (data.slider_img_5) newBgs.push(data.slider_img_5);
         
         if (newBgs.length > 0) {
           setBackgrounds(newBgs);
@@ -61,7 +59,7 @@ const Hero = () => {
           transition={{ duration: 0.8 }}
           className="max-w-3xl"
         >
-          <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
             {t('hero.title')}
           </h1>
           <p className="text-lg md:text-xl text-gray-200 mb-10 leading-relaxed">
@@ -79,8 +77,9 @@ const Hero = () => {
       </div>
 
       {/* Animated visual element */}
-      <motion.div 
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 animate-bounce"
+      <motion.a
+        href="#about"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 hover:text-white transition-colors animate-bounce cursor-pointer z-30"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}
@@ -88,9 +87,11 @@ const Hero = () => {
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
-      </motion.div>
+      </motion.a>
     </section>
   );
 };
 
 export default Hero;
+
+

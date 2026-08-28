@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Edit2 } from 'lucide-react';
 
 const AdminProjects = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
   
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
@@ -11,6 +12,7 @@ const AdminProjects = () => {
   const [status, setStatus] = useState("Jarayonda");
   const [desc, setDesc] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [existingImg, setExistingImg] = useState('');
 
   const fetchProjects = async () => {
     const res = await fetch('/api/projects');
@@ -19,7 +21,26 @@ const AdminProjects = () => {
 
   useEffect(() => { fetchProjects(); }, []);
 
-  const handleAdd = async (e: React.FormEvent) => {
+  const openAddModal = () => {
+    setEditId(null);
+    setName(''); setLocation(''); setType("Burg'ilash"); setStatus("Jarayonda"); setDesc('');
+    setImage(null); setExistingImg('');
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (item: any) => {
+    setEditId(item.id);
+    setName(item.name);
+    setLocation(item.location);
+    setType(item.type || "Burg'ilash");
+    setStatus(item.status || "Jarayonda");
+    setDesc(item.desc || '');
+    setExistingImg(item.img || '');
+    setImage(null);
+    setIsModalOpen(true);
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('name', name);
@@ -27,10 +48,15 @@ const AdminProjects = () => {
     formData.append('type', type);
     formData.append('status', status);
     formData.append('desc', desc);
+    if(existingImg && !image) formData.append('img', existingImg);
     if(image) formData.append('image', image);
 
-    await fetch('/api/projects', { method: 'POST', body: formData });
-    setName(''); setLocation(''); setDesc(''); setImage(null);
+    if (editId) {
+      await fetch(`/api/projects/${editId}`, { method: 'PUT', body: formData });
+    } else {
+      await fetch('/api/projects', { method: 'POST', body: formData });
+    }
+    
     setIsModalOpen(false);
     fetchProjects();
   };
@@ -42,11 +68,16 @@ const AdminProjects = () => {
     }
   };
 
+  const formatImg = (url: string) => {
+    if (!url) return '';
+    return url.replace('http://localhost:5000', '');
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
         <h2 className="text-xl font-bold text-gray-800">Loyihalar boshqaruvi</h2>
-        <button onClick={() => setIsModalOpen(true)} className="bg-corporate-accent text-white px-4 py-2 rounded-lg flex items-center font-medium"><Plus size={20} className="mr-2" /> Yangi qo'shish</button>
+        <button onClick={openAddModal} className="bg-corporate-accent text-white px-4 py-2 rounded-lg flex items-center font-medium"><Plus size={20} className="mr-2" /> Yangi qo'shish</button>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -63,11 +94,12 @@ const AdminProjects = () => {
             {projects.map((item) => (
               <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
                 <td className="p-4">
-                  {item.img ? <img src={item.img} className="w-12 h-12 rounded object-cover" /> : <div className="w-12 h-12 bg-gray-200 rounded"></div>}
+                  {item.img ? <img src={formatImg(item.img)} className="w-12 h-12 rounded object-cover" /> : <div className="w-12 h-12 bg-gray-200 rounded"></div>}
                 </td>
                 <td className="p-4 font-medium text-gray-800">{item.name}</td>
                 <td className="p-4 text-gray-600">{item.location}</td>
-                <td className="p-4 text-right space-x-2">
+                <td className="p-4 text-right flex justify-end space-x-2">
+                  <button onClick={() => openEditModal(item)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><Edit2 size={18} /></button>
                   <button onClick={() => handleDelete(item.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={18} /></button>
                 </td>
               </tr>
@@ -80,10 +112,10 @@ const AdminProjects = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
             <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-              <h3 className="font-bold">Yangi loyiha qo'shish</h3>
+              <h3 className="font-bold">{editId ? "Loyihani tahrirlash" : "Yangi loyiha qo'shish"}</h3>
               <button onClick={() => setIsModalOpen(false)}>✕</button>
             </div>
-            <form onSubmit={handleAdd} className="p-6 space-y-4">
+            <form onSubmit={handleSave} className="p-6 space-y-4">
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Loyiha nomi" className="w-full px-4 py-2 border rounded-md" required />
               <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Manzil (hudud)" className="w-full px-4 py-2 border rounded-md" required />
               <div className="flex gap-4">
@@ -98,10 +130,11 @@ const AdminProjects = () => {
                   <option>Yakunlangan</option>
                 </select>
               </div>
-              <textarea value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Qisqacha ma'lumot" className="w-full px-4 py-2 border rounded-md"></textarea>
+              <textarea rows={3} value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Loyiha haqida batafsil ma'lumot" className="w-full px-4 py-2 border rounded-md" required></textarea>
               <div>
-                <label className="block text-sm mb-1 text-gray-600">Loyiha rasmi</label>
-                <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)} className="w-full border p-2 rounded-md" />
+                <label className="block text-sm mb-1 text-gray-600 font-medium">Loyiha rasmi</label>
+                <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files?.[0] || null)} className="w-full border p-2 rounded-md" />
+                {existingImg && !image && <p className="text-xs text-gray-500 mt-1">Eski rasm saqlangan. Yangisini yuklasangiz almashadi.</p>}
               </div>
               <div className="pt-4 flex justify-end space-x-3">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-100 rounded-md">Bekor</button>

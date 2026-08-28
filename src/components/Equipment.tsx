@@ -20,10 +20,10 @@ const Equipment = () => {
     : equipments.filter(item => item.category === activeFilter);
 
   return (
-    <section id="equipment" className="py-20 bg-white">
+    <section id="equipment" className="py-20 bg-white/70 backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-corporate-dark mb-4">{t('equipment.title')}</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-corporate-dark mb-4">{t('equipment.title')}</h2>
           <div className="w-20 h-1 bg-corporate-accent mx-auto mb-8"></div>
           
           <div className="flex flex-wrap justify-center gap-4 mb-10">
@@ -41,7 +41,7 @@ const Equipment = () => {
               <motion.div layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.3 }} key={item.id} className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-shadow">
                 <div className="h-64 overflow-hidden relative bg-gray-100">
                   {item.img && <img src={item.img} alt={item.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />}
-                  <div className="absolute top-4 left-4 bg-corporate-blue text-white text-xs px-3 py-1 rounded-full font-medium">{item.category}</div>
+                  <div className="absolute top-4 left-4 bg-corporate-blue/85 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full font-medium">{item.category}</div>
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-corporate-dark mb-1">{item.name}</h3>
@@ -59,3 +59,6 @@ const Equipment = () => {
   );
 };
 export default Equipment;
+
+
+

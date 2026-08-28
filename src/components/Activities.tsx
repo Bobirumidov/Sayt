@@ -27,10 +27,10 @@ const Activities = () => {
   ];
 
   return (
-    <section id="activities" className="py-20 bg-gray-50">
+    <section id="activities" className="py-20 bg-white/75 backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-corporate-dark mb-4">{t('activities.title')}</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-corporate-dark mb-4">{t('activities.title')}</h2>
           <div className="w-20 h-1 bg-corporate-accent mx-auto"></div>
         </div>
 
@@ -60,3 +60,6 @@ const Activities = () => {
 };
 
 export default Activities;
+
+
+

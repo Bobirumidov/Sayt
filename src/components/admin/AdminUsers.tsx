@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Shield } from 'lucide-react';
+import { Plus, Trash2, Shield, Edit2 } from 'lucide-react';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editUserId, setEditUserId] = useState<number | null>(null);
   
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,18 +19,39 @@ const AdminUsers = () => {
 
   useEffect(() => { fetchUsers(); }, []);
 
+  const openAddModal = () => {
+    setEditUserId(null);
+    setUsername('');
+    setPassword('');
+    setRole('editor');
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (user: any) => {
+    setEditUserId(user.id);
+    setUsername(user.username);
+    setPassword(user.password);
+    setRole(user.role);
+    setIsModalOpen(true);
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await fetch('/api/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, role })
-      });
+      if (editUserId) {
+        await fetch(`/api/users/${editUserId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, role })
+        });
+      } else {
+        await fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, role })
+        });
+      }
       setIsModalOpen(false);
-      setUsername('');
-      setPassword('');
-      setRole('editor');
       fetchUsers();
     } catch (e) {}
   };
@@ -58,7 +80,7 @@ const AdminUsers = () => {
           </h2>
           <p className="text-sm text-gray-500 mt-1">Tizimga kirish huquqlarini boshqarish</p>
         </div>
-        <button onClick={() => setIsModalOpen(true)} className="bg-corporate-accent text-white px-4 py-2 rounded-lg flex items-center font-medium">
+        <button onClick={openAddModal} className="bg-corporate-accent text-white px-4 py-2 rounded-lg flex items-center font-medium">
           <Plus size={20} className="mr-2" /> Yangi qo'shish
         </button>
       </div>
@@ -86,7 +108,10 @@ const AdminUsers = () => {
                     {getRoleLabel(item.role)}
                   </span>
                 </td>
-                <td className="p-4 text-right space-x-2">
+                <td className="p-4 text-right flex justify-end space-x-2">
+                  <button onClick={() => openEditModal(item)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                    <Edit2 size={18} />
+                  </button>
                   <button onClick={() => handleDelete(item.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg" disabled={item.username === 'admin'}>
                     <Trash2 size={18} />
                   </button>
@@ -101,7 +126,7 @@ const AdminUsers = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
             <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-              <h3 className="font-bold">Yangi foydalanuvchi qo'shish</h3>
+              <h3 className="font-bold">{editUserId ? "Foydalanuvchini tahrirlash" : "Yangi foydalanuvchi qo'shish"}</h3>
               <button onClick={() => setIsModalOpen(false)}>✕</button>
             </div>
             <form onSubmit={handleSave} className="p-6 space-y-4">
@@ -115,7 +140,7 @@ const AdminUsers = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Roli (Huquqi)</label>
-                <select value={role} onChange={e => setRole(e.target.value)} className="w-full px-4 py-2 border rounded-md" required>
+                <select value={role} onChange={e => setRole(e.target.value)} className="w-full px-4 py-2 border rounded-md" required disabled={username === 'admin'}>
                   <option value="editor">Editor (Muharrir: Yangilik, Loyiha, Texnika)</option>
                   <option value="hr">HR (Kadrlar: Vakansiyalar, CV xabarlar)</option>
                   <option value="superadmin">Superadmin (Barcha ruxsatlar)</option>

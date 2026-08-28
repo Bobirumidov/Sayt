@@ -47,10 +47,10 @@ const Vacancies = () => {
   };
 
   return (
-    <section id="vacancies" className="py-20 bg-gray-50">
+    <section id="vacancies" className="py-20 bg-white/75 backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-corporate-dark mb-4">{t('vacancies.title')}</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-corporate-dark mb-4">{t('vacancies.title')}</h2>
           <div className="w-20 h-1 bg-corporate-accent mx-auto mb-8"></div>
         </div>
 
@@ -120,7 +120,7 @@ const Vacancies = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Vakansiya</label>
-                  <select value={formData.vacancy} onChange={e => setFormData({...formData, vacancy: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-corporate-accent outline-none bg-white" required>
+                  <select value={formData.vacancy} onChange={e => setFormData({...formData, vacancy: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-corporate-accent outline-none bg-white/70 backdrop-blur-md" required>
                     <option value="" disabled>Vakansiyani tanlang</option>
                     {vacancies.map(v => <option key={v.id} value={v.title}>{v.title}</option>)}
                   </select>
@@ -144,3 +144,6 @@ const Vacancies = () => {
 };
 
 export default Vacancies;
+
+
+

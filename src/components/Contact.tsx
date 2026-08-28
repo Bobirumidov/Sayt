@@ -1,10 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({ name: '', phone: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState('');
+  const [settings, setSettings] = useState<any>({});
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => setSettings(data))
+      .catch(err => console.log(err));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,10 +35,10 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-white">
+    <section id="contact" className="py-20 bg-white/70 backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-corporate-dark mb-4">{t('contact.title')}</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-corporate-dark mb-4">{t('contact.title')}</h2>
           <div className="w-20 h-1 bg-corporate-accent mx-auto"></div>
         </div>
 
@@ -42,7 +50,7 @@ const Contact = () => {
                 <div className="w-12 h-12 bg-blue-50 text-corporate-accent rounded-full flex items-center justify-center shrink-0 mr-4">📍</div>
                 <div>
                   <h4 className="font-bold text-corporate-dark mb-1">{t('contact.address')}</h4>
-                  <p className="text-gray-600">{t('contact.address_val')}</p>
+                  <p className="text-gray-600 whitespace-pre-wrap">{settings.address || t('contact.address_val')}</p>
                 </div>
               </div>
               
@@ -50,7 +58,7 @@ const Contact = () => {
                 <div className="w-12 h-12 bg-blue-50 text-corporate-accent rounded-full flex items-center justify-center shrink-0 mr-4">📞</div>
                 <div>
                   <h4 className="font-bold text-corporate-dark mb-1">{t('contact.phone')}</h4>
-                  <p className="text-gray-600">+998 71 123 45 67<br />+998 90 987 65 43</p>
+                  <p className="text-gray-600 whitespace-pre-wrap">{settings.phone || '+998 71 123 45 67\n+998 90 987 65 43'}</p>
                 </div>
               </div>
 
@@ -58,7 +66,7 @@ const Contact = () => {
                 <div className="w-12 h-12 bg-blue-50 text-corporate-accent rounded-full flex items-center justify-center shrink-0 mr-4">✉️</div>
                 <div>
                   <h4 className="font-bold text-corporate-dark mb-1">{t('contact.email')}</h4>
-                  <p className="text-gray-600">info@ung-burgilash.uz<br />hr@ung-burgilash.uz</p>
+                  <p className="text-gray-600 whitespace-pre-wrap">{settings.email || 'info@ung-burgilash.uz\nhr@ung-burgilash.uz'}</p>
                 </div>
               </div>
               
@@ -66,14 +74,14 @@ const Contact = () => {
                 <div className="w-12 h-12 bg-blue-50 text-corporate-accent rounded-full flex items-center justify-center shrink-0 mr-4">🕒</div>
                 <div>
                   <h4 className="font-bold text-corporate-dark mb-1">{t('contact.hours')}</h4>
-                  <p className="text-gray-600">{t('contact.hours_val')}</p>
+                  <p className="text-gray-600 whitespace-pre-wrap">{settings.hours || t('contact.hours_val')}</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="w-full lg:w-1/2">
-            <div className="bg-corporate-dark p-8 md:p-10 rounded-2xl shadow-xl">
+            <div className="bg-corporate-dark/85 backdrop-blur-md p-8 md:p-10 rounded-2xl shadow-xl">
               <h3 className="text-2xl font-bold text-white mb-6">{t('contact.send')}</h3>
               
               {status === 'success' && (
@@ -118,3 +126,6 @@ const Contact = () => {
 };
 
 export default Contact;
+
+
+

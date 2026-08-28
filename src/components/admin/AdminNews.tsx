@@ -13,7 +13,8 @@ const AdminNews = () => {
   const [formData, setFormData] = useState({
     title_uz: '', title_ru: '', title_en: '',
     category_uz: '', category_ru: '', category_en: '',
-    desc_uz: '', desc_ru: '', desc_en: ''
+    desc_uz: '', desc_ru: '', desc_en: '',
+    video_url: ''
   });
 
   const [image, setImage] = useState<File | null>(null);
@@ -32,7 +33,8 @@ const AdminNews = () => {
     setFormData({
       title_uz: '', title_ru: '', title_en: '',
       category_uz: '', category_ru: '', category_en: '',
-      desc_uz: '', desc_ru: '', desc_en: ''
+      desc_uz: '', desc_ru: '', desc_en: '',
+      video_url: ''
     });
     setImage(null);
     setActiveTab('uz');
@@ -50,7 +52,8 @@ const AdminNews = () => {
       category_en: item.category_en || '',
       desc_uz: item.desc_uz || item.desc || '', 
       desc_ru: item.desc_ru || '', 
-      desc_en: item.desc_en || ''
+      desc_en: item.desc_en || '',
+      video_url: item.video_url || ''
     });
     setImage(null);
     setActiveTab('uz');
@@ -162,11 +165,17 @@ const AdminNews = () => {
               </div>
 
               <hr className="my-4 border-gray-100" />
-              
-              <div>
-                <label className="block text-sm mb-1 text-gray-600 font-medium">Rasm yuklash (Barcha tillar uchun umumiy)</label>
-                <input type="file" accept="image/*" onChange={e => setImage(e.target.files ? e.target.files[0] : null)} className="w-full border p-2 rounded-md" />
-              </div>
+                
+                <div>
+                  <label className="block text-sm mb-1 text-gray-600 font-medium">Video havolasi (YouTube, ixtiyoriy)</label>
+                  <input type="text" name="video_url" value={formData.video_url} onChange={handleChange} placeholder="https://www.youtube.com/watch?v=..." className="w-full px-4 py-2 border rounded-md" />
+                  <p className="text-xs text-gray-400 mt-1">Faqat YouTube yoki MP4 havolasini kiritishingiz mumkin.</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm mb-1 text-gray-600 font-medium">Asosiy rasm (Kichkina banner)</label>
+                  <input type="file" onChange={(e) => setImage(e.target.files?.[0] || null)} className="w-full" accept="image/*" />
+                </div>
               
               <div className="pt-4 flex justify-end space-x-3">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-100 rounded-md">Bekor</button>

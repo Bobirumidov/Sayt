@@ -7,6 +7,19 @@ const AdminMessages = () => {
   const [applications, setApplications] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
 
+  const formatDateTime = (timestamp: number) => {
+    if (!timestamp) return '';
+    // Check if the id is a valid millisecond timestamp
+    if (timestamp < 1000000000000) return 'Noma\'lum';
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+  };
+
   const fetchData = async () => {
     try {
       if (activeTab === 'applications') {
@@ -60,6 +73,7 @@ const AdminMessages = () => {
                 <th className="p-4 font-medium">Ism (F.I.Sh)</th>
                 <th className="p-4 font-medium">Aloqa (Tel / Email)</th>
                 <th className="p-4 font-medium">Vakansiya</th>
+                <th className="p-4 font-medium">Yuborilgan vaqt</th>
                 <th className="p-4 font-medium text-right">CV / Rezyume</th>
                 <th className="p-4 font-medium text-right">Amallar</th>
               </tr>
@@ -73,6 +87,7 @@ const AdminMessages = () => {
                     <div className="text-xs text-blue-500">{item.email}</div>
                   </td>
                   <td className="p-4 text-gray-600 font-medium">{item.vacancy}</td>
+                  <td className="p-4 text-gray-500 whitespace-nowrap">{formatDateTime(item.id)}</td>
                   <td className="p-4 text-right">
                     {item.img ? (
                       <a href={item.img} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1 text-corporate-accent hover:underline bg-blue-50 px-3 py-1 rounded-full">
@@ -89,7 +104,7 @@ const AdminMessages = () => {
               ))}
               {applications.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-gray-500">Hozircha hech qanday ariza kelib tushmagan.</td>
+                  <td colSpan={6} className="p-8 text-center text-gray-500">Hozircha hech qanday ariza kelib tushmagan.</td>
                 </tr>
               )}
             </tbody>
@@ -102,6 +117,7 @@ const AdminMessages = () => {
                 <th className="p-4 font-medium">Aloqa</th>
                 <th className="p-4 font-medium">Mavzu</th>
                 <th className="p-4 font-medium">Xabar matni</th>
+                <th className="p-4 font-medium">Yuborilgan vaqt</th>
                 <th className="p-4 font-medium text-right">Amallar</th>
               </tr>
             </thead>
@@ -115,6 +131,7 @@ const AdminMessages = () => {
                   </td>
                   <td className="p-4 text-gray-800 font-medium">{item.subject}</td>
                   <td className="p-4 text-gray-600 max-w-xs truncate" title={item.message}>{item.message}</td>
+                  <td className="p-4 text-gray-500 whitespace-nowrap">{formatDateTime(item.id)}</td>
                   <td className="p-4 text-right space-x-2">
                     <button onClick={() => handleDelete(item.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={18} /></button>
                   </td>
@@ -122,7 +139,7 @@ const AdminMessages = () => {
               ))}
               {messages.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-gray-500">Hozircha hech qanday xabar yo'q.</td>
+                  <td colSpan={6} className="p-8 text-center text-gray-500">Hozircha hech qanday xabar yo'q.</td>
                 </tr>
               )}
             </tbody>
