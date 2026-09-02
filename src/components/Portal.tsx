@@ -390,6 +390,27 @@ const Portal = () => {
     }
   }, [chatMessages, activeTab]);
 
+  const exportUsersToCSV = () => {
+    const csvContent = [
+      ['F.I.SH', 'Login', 'Parol', 'Rol'].join(','),
+      ...allUsers.map(u => [
+        `"${u.name || ''}"`,
+        `"${u.username || ''}"`,
+        `"${u.password || ''}"`,
+        `"${u.role || 'employee'}"`
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `xodimlar_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
 
   if (!currentUser) {
     return (
@@ -666,6 +687,13 @@ const Portal = () => {
                   className="text-xs bg-corporate-accent hover:bg-blue-600 text-white px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1 shadow-sm"
                 >
                   ➕ Yangi xodim qo'shish
+                </button>
+                <button 
+                  onClick={exportUsersToCSV}
+                  className="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1 shadow-sm"
+                  title="Xodimlar ro'yxatini parollari bilan Excel (CSV) formatida yuklab olish"
+                >
+                  <Download size={14} /> Excelga yuklash
                 </button>
                 <button onClick={fetchUsers} className="text-sm text-corporate-accent hover:underline">Yangilash</button>
               </div>
