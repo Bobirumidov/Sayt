@@ -183,12 +183,28 @@ const Portal = () => {
   const handleDownload = (id: number) => {
     window.location.href = '/api/portal/files/' + id + '/download';
     setTimeout(() => {
-      setFiles(files.filter(f => f.id !== id));
-      setSuccess('Fayl yuklab olindi va serverdan ochirildi!');
+      // Refresh to update downloaded status if needed, but don't delete from UI anymore
+      fetchFiles();
+      setSuccess('Fayl yuklab olindi!');
       setTimeout(() => setSuccess(''), 3000);
     }, 1000);
   };
 
+  const handleDeleteFile = async (id: number) => {
+    if (!window.confirm("Rostdan ham ushbu faylni o'chirmoqchimisiz?")) return;
+    try {
+      const res = await fetch('/api/portal/files/' + id, { method: 'DELETE' });
+      if (res.ok) {
+        setFiles(files.filter(f => f.id !== id));
+        setSuccess("Fayl o'chirildi");
+        setTimeout(() => setSuccess(''), 3000);
+      } else {
+        setError("Faylni o'chirishda xatolik");
+      }
+    } catch (e) {
+      setError("Tarmoq xatosi");
+    }
+  };
   const fetchChat = async (since = 0) => {
     if (!currentUser) return;
     try {
@@ -672,13 +688,22 @@ const Portal = () => {
                           </div>
                         </div>
                       </div>
-                      <button 
-                        onClick={() => handleDownload(file.id)}
-                        className="flex items-center space-x-2 text-corporate-accent bg-blue-50 px-4 py-2 rounded-md hover:bg-corporate-accent hover:text-white transition-colors whitespace-nowrap"
-                      >
-                        <Download size={18} />
-                        <span className="hidden sm:inline">Olib qolish</span>
-                      </button>
+                      <div className="flex items-center space-x-2">
+                        <button 
+                          onClick={() => handleDownload(file.id)}
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors whitespace-nowrap ${file.downloaded ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'text-corporate-accent bg-blue-50 hover:bg-corporate-accent hover:text-white'}`}
+                        >
+                          {file.downloaded ? <CheckCircle size={18} /> : <Download size={18} />}
+                          <span className="hidden sm:inline">{file.downloaded ? 'Olingan' : 'Olib qolish'}</span>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteFile(file.id)}
+                          className="p-2 text-red-500 bg-red-50 rounded-md hover:bg-red-500 hover:text-white transition-colors"
+                          title="Faylni o'chirish"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </li>
                   ))}
                 </ul>

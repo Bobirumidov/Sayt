@@ -485,7 +485,7 @@ app.delete('/api/users/:id', (req, res) => {
     if (!data.portal_files) data.portal_files = [];
     
     const fileIndex = data.portal_files.findIndex(f => f.id === id);
-    if (fileIndex === -1) return res.status(404).json({ error: "Fayl topilmadi yoki allaqachon yuklab olingan" });
+    if (fileIndex === -1) return res.status(404).json({ error: "Fayl topilmadi" });
     
     const fileRecord = data.portal_files[fileIndex];
     const filePath = path.join(UPLOADS_DIR, fileRecord.filename);
@@ -493,17 +493,34 @@ app.delete('/api/users/:id', (req, res) => {
     if (fs.existsSync(filePath)) {
       res.download(filePath, fileRecord.originalName, (err) => {
         if (!err) {
-          try { fs.unlinkSync(filePath); } catch (e) { console.error("Fayl ochirishda xatolik:", e); }
           const updatedData = readData();
-          updatedData.portal_files = updatedData.portal_files.filter(f => f.id !== id);
-          writeData(updatedData);
+          const record = updatedData.portal_files.find(f => f.id === id);
+          if (record) {
+             record.downloaded = true;
+             writeData(updatedData);
+          }
         }
       });
     } else {
-      data.portal_files.splice(fileIndex, 1);
-      writeData(data);
-      res.status(404).json({ error: "Fayl topilmadi" });
+      res.status(404).json({ error: "Fayl serverda topilmadi" });
     }
+  });
+
+  app.delete('/api/portal/files/:id', (req, res) => {
+    const data = readData();
+    const id = parseInt(req.params.id);
+    if (!data.portal_files) data.portal_files = [];
+    
+    const fileIndex = data.portal_files.findIndex(f => f.id === id);
+    if (fileIndex !== -1) {
+      const fileRecord = data.portal_files[fileIndex];
+      const filePath = path.join(UPLOADS_DIR, fileRecord.filename);
+      try { if (fs.existsSync(filePath)) fs.unlinkSync(filePath); } catch (e) { console.error("Fayl ochirishda xatolik:", e); }
+      
+      data.portal_files = data.portal_files.filter(f => f.id !== id);
+      writeData(data);
+    }
+    res.json({ success: true });
   });
 
   // --- PORTAL CHAT ---
