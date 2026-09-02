@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Upload, Download, FileText, X, ShieldAlert, CheckCircle, UserPlus, LogIn, User, Trash2, MessageSquare, Send, ChevronDown, Check, Key, Smile } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 const Portal = () => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   // Form states
@@ -390,25 +392,40 @@ const Portal = () => {
     }
   }, [chatMessages, activeTab]);
 
-  const exportUsersToCSV = () => {
-    const csvContent = [
-      ['F.I.SH', 'Login', 'Parol', 'Rol'].join(','),
-      ...allUsers.map(u => [
-        `"${u.name || ''}"`,
-        `"${u.username || ''}"`,
-        `"${u.password || ''}"`,
-        `"${u.role || 'employee'}"`
-      ].join(','))
-    ].join('\n');
+  const exportUsersToExcel = () => {
+    const wsData = [
+      ['F.I.SH', 'Login', 'Parol', 'Rol'],
+      ...allUsers.map(u => [u.name || '', u.username || '', u.password || '', u.role || 'employee'])
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Xodimlar");
+    XLSX.writeFile(wb, `xodimlar_${new Date().toISOString().split('T')[0]}.xlsx`);
+  };
 
-    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `xodimlar_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const exportUsersToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("Xodimlar Ro'yxati va Parollari", 14, 15);
+    
+    const tableData = allUsers.map(u => [
+      u.name || '',
+      u.username || '',
+      u.password || '',
+      u.role || 'employee'
+    ]);
+    
+    (doc as any).autoTable({
+      startY: 25,
+      head: [['F.I.SH', 'Login', 'Parol', 'Rol']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: { fillColor: [30, 58, 138] },
+      styles: { font: 'helvetica' }
+    });
+    
+    doc.save(`xodimlar_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
 
@@ -689,11 +706,18 @@ const Portal = () => {
                   ➕ Yangi xodim qo'shish
                 </button>
                 <button 
-                  onClick={exportUsersToCSV}
+                  onClick={exportUsersToExcel}
                   className="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1 shadow-sm"
-                  title="Xodimlar ro'yxatini parollari bilan Excel (CSV) formatida yuklab olish"
+                  title="Xodimlar ro'yxatini Excel formatida yuklab olish"
                 >
-                  <Download size={14} /> Excelga yuklash
+                  <Download size={14} /> Excel
+                </button>
+                <button 
+                  onClick={exportUsersToPDF}
+                  className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md font-semibold transition-colors flex items-center gap-1 shadow-sm"
+                  title="Xodimlar ro'yxatini PDF formatida yuklab olish"
+                >
+                  <Download size={14} /> PDF
                 </button>
                 <button onClick={fetchUsers} className="text-sm text-corporate-accent hover:underline">Yangilash</button>
               </div>
