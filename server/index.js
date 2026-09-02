@@ -493,6 +493,7 @@ app.delete('/api/users/:id', (req, res) => {
     if (fs.existsSync(filePath)) {
       res.download(filePath, fileRecord.originalName, (err) => {
         if (!err) {
+          try { fs.unlinkSync(filePath); } catch (e) { console.error("Fayl ochirishda xatolik:", e); }
           const updatedData = readData();
           const record = updatedData.portal_files.find(f => f.id === id);
           if (record) {
@@ -502,7 +503,7 @@ app.delete('/api/users/:id', (req, res) => {
         }
       });
     } else {
-      res.status(404).json({ error: "Fayl serverda topilmadi" });
+      res.status(404).json({ error: "Fayl serverda topilmadi yoki allaqachon yuklab olingan" });
     }
   });
 

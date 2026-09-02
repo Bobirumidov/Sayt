@@ -690,8 +690,9 @@ const Portal = () => {
                       </div>
                       <div className="flex items-center space-x-2">
                         <button 
-                          onClick={() => handleDownload(file.id)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors whitespace-nowrap ${file.downloaded ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'text-corporate-accent bg-blue-50 hover:bg-corporate-accent hover:text-white'}`}
+                          onClick={() => !file.downloaded && handleDownload(file.id)}
+                          disabled={file.downloaded}
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors whitespace-nowrap ${file.downloaded ? 'bg-gray-50 text-gray-400 cursor-not-allowed opacity-70' : 'text-corporate-accent bg-blue-50 hover:bg-corporate-accent hover:text-white'}`}
                         >
                           {file.downloaded ? <CheckCircle size={18} /> : <Download size={18} />}
                           <span className="hidden sm:inline">{file.downloaded ? 'Olingan' : 'Olib qolish'}</span>
