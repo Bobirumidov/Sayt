@@ -18,6 +18,8 @@ const AdminNews = () => {
   });
 
   const [image, setImage] = useState<File | null>(null);
+  const [additionalImages, setAdditionalImages] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>([]);
 
   const fetchNews = async () => {
     try {
@@ -37,6 +39,8 @@ const AdminNews = () => {
       video_url: ''
     });
     setImage(null);
+    setAdditionalImages([]);
+    setExistingImages([]);
     setActiveTab('uz');
     setIsModalOpen(true);
   };
@@ -56,12 +60,18 @@ const AdminNews = () => {
       video_url: item.video_url || ''
     });
     setImage(null);
+    setAdditionalImages([]);
+    setExistingImages(item.images || []);
     setActiveTab('uz');
     setIsModalOpen(true);
   };
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleRemoveExistingImage = (index: number) => {
+    setExistingImages(existingImages.filter((_, i) => i !== index));
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -74,6 +84,8 @@ const AdminNews = () => {
 
     if (!editId) data.append('date', new Date().toLocaleDateString('uz-UZ'));
     if (image) data.append('image', image);
+    additionalImages.forEach((img) => data.append('images', img));
+    data.append('existingImages', JSON.stringify(existingImages));
 
     try {
       const url = editId ? `/api/news/${editId}` : '/api/news';
@@ -175,6 +187,24 @@ const AdminNews = () => {
                 <div>
                   <label className="block text-sm mb-1 text-gray-600 font-medium">Asosiy rasm (Kichkina banner)</label>
                   <input type="file" onChange={(e) => setImage(e.target.files?.[0] || null)} className="w-full" accept="image/*" />
+                </div>
+                
+                <div className="mt-4">
+                  <label className="block text-sm mb-1 text-gray-600 font-medium">Qo'shimcha rasmlar (Galereya uchun, 5-6 ta gacha)</label>
+                  <input type="file" multiple onChange={(e) => setAdditionalImages(Array.from(e.target.files || []))} className="w-full border p-2 rounded-md bg-white" accept="image/*" />
+                  
+                  {existingImages.length > 0 && (
+                    <div className="flex flex-wrap gap-3 mt-3">
+                      {existingImages.map((imgUrl, i) => (
+                        <div key={i} className="relative w-20 h-20 border border-gray-200 rounded-md bg-gray-50 flex items-center justify-center">
+                          <img src={imgUrl} alt="Gallery" className="w-full h-full object-cover rounded-md" />
+                          <button type="button" onClick={() => handleRemoveExistingImage(i)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-sm hover:bg-red-600">
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               
               <div className="pt-4 flex justify-end space-x-3">

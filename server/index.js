@@ -92,7 +92,7 @@ const createCrudEndpoints = (resourceName) => {
   });
 
   // POST (Rasmi bilan yoki rasmsiz)
-  app.post(`/api/${resourceName}`, upload.single('image'), (req, res) => {
+  app.post(`/api/${resourceName}`, upload.any(), (req, res) => {
     const data = readData();
     
     // Check if disabled in settings
@@ -103,9 +103,17 @@ const createCrudEndpoints = (resourceName) => {
       return res.status(403).json({ error: "Xabar yuborish vaqtinchalik to'xtatilgan" });
     }
     
-    let imageUrl = req.body.img || req.body.image || null; // Eski URL bo'lishi mumkin
-    if (req.file) {
-      imageUrl = `/uploads/${req.file.filename}`;
+    let imageUrl = req.body.img || req.body.image || null; 
+    let multipleImages = [];
+
+    if (req.files && req.files.length > 0) {
+      const mainImageFile = req.files.find(f => f.fieldname === 'image');
+      if (mainImageFile) imageUrl = `/uploads/${mainImageFile.filename}`;
+      
+      const otherImages = req.files.filter(f => f.fieldname === 'images' || f.fieldname === 'images[]');
+      if (otherImages.length > 0) {
+        multipleImages = otherImages.map(f => `/uploads/${f.filename}`);
+      }
     }
 
     const newItem = {
@@ -113,6 +121,10 @@ const createCrudEndpoints = (resourceName) => {
       ...req.body,
       img: imageUrl // Rasmni saqlash
     };
+    
+    if (multipleImages.length > 0) {
+      newItem.images = multipleImages;
+    }
     
     if(!data[resourceName]) data[resourceName] = [];
     data[resourceName].unshift(newItem); 
@@ -122,23 +134,41 @@ const createCrudEndpoints = (resourceName) => {
   });
 
   // PUT (Tahrirlash)
-  app.put(`/api/${resourceName}/:id`, upload.single('image'), (req, res) => {
+  app.put(`/api/${resourceName}/:id`, upload.any(), (req, res) => {
     const data = readData();
     const id = parseInt(req.params.id);
     
     if (data[resourceName]) {
       const index = data[resourceName].findIndex(item => item.id === id);
       if (index !== -1) {
-        let imageUrl = data[resourceName][index].img; // Eski rasmni saqlab qolish
-        if (req.file) {
-          imageUrl = `/uploads/${req.file.filename}`; // Yangi rasm yuklansa
+        let imageUrl = data[resourceName][index].img; 
+        let currentImages = data[resourceName][index].images || [];
+        
+        if (req.files && req.files.length > 0) {
+          const mainImageFile = req.files.find(f => f.fieldname === 'image');
+          if (mainImageFile) imageUrl = `/uploads/${mainImageFile.filename}`;
+          
+          const otherImages = req.files.filter(f => f.fieldname === 'images' || f.fieldname === 'images[]');
+          if (otherImages.length > 0) {
+            currentImages = [...currentImages, ...otherImages.map(f => `/uploads/${f.filename}`)];
+          }
+        }
+        
+        // Handle images to keep/remove if passed via req.body.existingImages
+        if (req.body.existingImages !== undefined) {
+          try {
+            currentImages = JSON.parse(req.body.existingImages);
+          } catch(e) {
+            currentImages = Array.isArray(req.body.existingImages) ? req.body.existingImages : [req.body.existingImages];
+          }
         }
         
         data[resourceName][index] = {
           ...data[resourceName][index],
           ...req.body,
-          id: id, // ID ni o'zgarmas saqlash
-          img: imageUrl
+          id: id, 
+          img: imageUrl,
+          images: currentImages
         };
         
         writeData(data);

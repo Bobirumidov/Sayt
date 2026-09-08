@@ -116,9 +116,27 @@ const NewsDetail = () => {
               </div>
             )}
 
-            <div className="prose prose-lg max-w-none text-gray-700 whitespace-pre-wrap">
+            <div className="prose prose-lg max-w-none text-gray-700 whitespace-pre-wrap mb-10">
               {getVal(item, 'desc')}
             </div>
+            
+            {item.images && item.images.length > 0 && (
+              <div className="mt-8 border-t pt-8">
+                <h3 className="text-xl font-bold text-corporate-dark mb-6">Fotogalereya</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {item.images.map((imgUrl: string, idx: number) => (
+                    <div key={idx} className="aspect-square rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+                      <img 
+                        src={formatImg(imgUrl)} 
+                        alt="Gallery item" 
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500 cursor-pointer"
+                        onClick={() => window.open(formatImg(imgUrl), '_blank')}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </article>
       </div>
