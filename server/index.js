@@ -144,6 +144,16 @@ const createCrudEndpoints = (resourceName) => {
         let imageUrl = data[resourceName][index].img; 
         let currentImages = data[resourceName][index].images || [];
         
+        // 1. Avval qaysi eski rasmlar saqlanishini aniqlaymiz
+        if (req.body.existingImages !== undefined) {
+          try {
+            currentImages = JSON.parse(req.body.existingImages);
+          } catch(e) {
+            currentImages = Array.isArray(req.body.existingImages) ? req.body.existingImages : [req.body.existingImages];
+          }
+        }
+        
+        // 2. Keyin yangi yuklangan rasmlarni qo'shamiz
         if (req.files && req.files.length > 0) {
           const mainImageFile = req.files.find(f => f.fieldname === 'image');
           if (mainImageFile) imageUrl = `/uploads/${mainImageFile.filename}`;
@@ -151,15 +161,6 @@ const createCrudEndpoints = (resourceName) => {
           const otherImages = req.files.filter(f => f.fieldname === 'images' || f.fieldname === 'images[]');
           if (otherImages.length > 0) {
             currentImages = [...currentImages, ...otherImages.map(f => `/uploads/${f.filename}`)];
-          }
-        }
-        
-        // Handle images to keep/remove if passed via req.body.existingImages
-        if (req.body.existingImages !== undefined) {
-          try {
-            currentImages = JSON.parse(req.body.existingImages);
-          } catch(e) {
-            currentImages = Array.isArray(req.body.existingImages) ? req.body.existingImages : [req.body.existingImages];
           }
         }
         
