@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Statistics from './components/Statistics';
@@ -87,11 +88,32 @@ const DetailLayout = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
+function ScrollToHashElement() {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      setTimeout(() => {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 150);
+    }
+  }, [hash]);
+
+  return null;
+}
+
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<PublicLayout />} />
-      <Route path="/news/:id" element={<DetailLayout><NewsDetail /></DetailLayout>} />
+    <>
+      <ScrollToHashElement />
+      <Routes>
+        <Route path="/" element={<PublicLayout />} />
+        <Route path="/news" element={<DetailLayout><div className="pt-20"><News /></div></DetailLayout>} />
+        <Route path="/news/:id" element={<DetailLayout><NewsDetail /></DetailLayout>} />
       <Route path="/rahbariyat" element={<DetailLayout><Management /></DetailLayout>} />
       <Route path="/portal" element={<DetailLayout><Portal /></DetailLayout>} />
       <Route path="/face-registration" element={<DetailLayout><FaceId /></DetailLayout>} />
@@ -110,6 +132,7 @@ function App() {
         <Route path="management" element={<AdminManagement />} />
       </Route>
     </Routes>
+    </>
   );
 }
 

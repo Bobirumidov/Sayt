@@ -48,6 +48,36 @@ const NewsDetail = () => {
     return url;
   };
 
+  const galleryList = item ? [
+    ...(item?.img ? [item.img] : []),
+    ...(Array.isArray(item?.images) ? item.images : [])
+  ] : [];
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (lightboxIndex !== null && galleryList.length > 0) {
+      setLightboxIndex((lightboxIndex - 1 + galleryList.length) % galleryList.length);
+    }
+  };
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (lightboxIndex !== null && galleryList.length > 0) {
+      setLightboxIndex((lightboxIndex + 1) % galleryList.length);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (lightboxIndex === null || galleryList.length === 0) return;
+      if (e.key === 'Escape') setLightboxIndex(null);
+      if (e.key === 'ArrowLeft') setLightboxIndex((prev) => (prev !== null ? (prev - 1 + galleryList.length) % galleryList.length : null));
+      if (e.key === 'ArrowRight') setLightboxIndex((prev) => (prev !== null ? (prev + 1) % galleryList.length : null));
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxIndex, galleryList.length]);
+
   if (loading) {
     return (
       <div className="pt-32 pb-20 container mx-auto px-4 min-h-[60vh] flex justify-center items-center">
@@ -66,36 +96,6 @@ const NewsDetail = () => {
       </div>
     );
   }
-
-  const galleryList = [
-    ...(item?.img ? [item.img] : []),
-    ...(Array.isArray(item?.images) ? item.images : [])
-  ];
-
-  const handlePrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (lightboxIndex !== null && galleryList.length > 0) {
-      setLightboxIndex((lightboxIndex - 1 + galleryList.length) % galleryList.length);
-    }
-  };
-
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (lightboxIndex !== null && galleryList.length > 0) {
-      setLightboxIndex((lightboxIndex + 1) % galleryList.length);
-    }
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (lightboxIndex === null) return;
-      if (e.key === 'Escape') setLightboxIndex(null);
-      if (e.key === 'ArrowLeft') setLightboxIndex((prev) => (prev !== null ? (prev - 1 + galleryList.length) % galleryList.length : null));
-      if (e.key === 'ArrowRight') setLightboxIndex((prev) => (prev !== null ? (prev + 1) % galleryList.length : null));
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxIndex, galleryList.length]);
 
   return (
     <div className="pt-28 pb-20 bg-white/75 backdrop-blur-md min-h-[80vh]">
