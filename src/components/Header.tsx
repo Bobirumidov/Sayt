@@ -50,11 +50,11 @@ const Header = () => {
     <>
       {/* Banner - relative so it pushes content down naturally */}
       {topBanner && (
-        <div className={`w-full z-50 bg-white flex justify-center transition-all duration-300 ${isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-16 md:h-24 lg:h-28 opacity-100'}`}>
+        <div className={`w-full z-50 bg-white flex justify-center items-center transition-all duration-300 ${isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-14 sm:h-16 md:h-20 lg:h-24 opacity-100'}`}>
           <img 
             src={topBanner} 
             alt="Yuqori banner" 
-            className="w-full max-w-[1920px] object-cover h-16 md:h-24 lg:h-28" 
+            className="w-full max-w-[1920px] h-full object-contain px-2 sm:px-4" 
           />
         </div>
       )}
@@ -63,7 +63,7 @@ const Header = () => {
         className={`fixed w-full z-40 transition-all duration-300 ${
           isScrolled 
             ? 'top-0 bg-corporate-dark/85 backdrop-blur-md/95 backdrop-blur-sm py-4 shadow-lg' 
-            : `${topBanner ? 'top-16 md:top-24 lg:top-28' : 'top-0'} bg-transparent py-6`
+            : `${topBanner ? 'top-14 sm:top-16 md:top-20 lg:top-24' : 'top-0'} bg-transparent py-4 sm:py-6`
         }`}
       >
         <div className="container mx-auto px-4 flex justify-between items-center gap-6">
