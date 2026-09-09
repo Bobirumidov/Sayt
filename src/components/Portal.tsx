@@ -3,7 +3,7 @@ import { Upload, Download, FileText, X, ShieldAlert, CheckCircle, UserPlus, LogI
 import { motion } from 'framer-motion';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 const Portal = () => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   // Form states
@@ -420,28 +420,37 @@ const Portal = () => {
   };
 
   const exportUsersToPDF = () => {
-    const doc = new jsPDF();
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-    doc.text("Xodimlar Ro'yxati va Parollari", 14, 15);
-    
-    const tableData = allUsers.map(u => [
-      u.name || '',
-      u.username || '',
-      u.password || '',
-      u.role || 'employee'
-    ]);
-    
-    (doc as any).autoTable({
-      startY: 25,
-      head: [['F.I.SH', 'Login', 'Parol', 'Rol']],
-      body: tableData,
-      theme: 'grid',
-      headStyles: { fillColor: [30, 58, 138] },
-      styles: { font: 'helvetica' }
-    });
-    
-    doc.save(`xodimlar_${new Date().toISOString().split('T')[0]}.pdf`);
+    try {
+      const doc = new jsPDF();
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text("Xodimlar Ro'yxati va Parollari", 14, 15);
+      
+      const tableData = allUsers.map(u => [
+        u.name || '',
+        u.username || '',
+        u.password || '',
+        u.role === 'admin' ? 'Administrator' : 'Xodim'
+      ]);
+      
+      autoTable(doc, {
+        startY: 25,
+        head: [['F.I.SH', 'Login', 'Parol', 'Rol']],
+        body: tableData,
+        theme: 'grid',
+        headStyles: { fillColor: [30, 58, 138], textColor: [255, 255, 255], fontStyle: 'bold' },
+        styles: { font: 'helvetica', fontSize: 10, cellPadding: 3 },
+        alternateRowStyles: { fillColor: [248, 250, 252] }
+      });
+      
+      doc.save(`xodimlar_${new Date().toISOString().split('T')[0]}.pdf`);
+      setSuccess("PDF fayl muvaffaqiyatli yuklab olindi!");
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err: any) {
+      console.error("PDF yaratishda xatolik:", err);
+      setError("PDF yuklab olishda xatolik yuz berdi: " + (err?.message || 'Xatolik'));
+      setTimeout(() => setError(''), 5000);
+    }
   };
 
 
